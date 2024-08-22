@@ -1,8 +1,7 @@
-import { Client, Databases, Account } from "node-appwrite";
-import { getUpcomingEvents } from "./utils/event-actions.js";
+import { Client, Databases } from "node-appwrite";
+import { getEvent, getEvents, getUpcomingEvents } from './utils/event-actions.js'
 
 export const client = new Client();
-export const account = new Account(client);
 export const databases = new Databases(client);
 
 
@@ -18,6 +17,18 @@ export default async ({ req, res, log, error }) => {
 
   if (req.method === "GET") {
     switch (req.path) {
+      case '/getEvent':
+        const event = await getEvent(req.query);
+        if (!event) {
+          return res.send("Error fetching user data");
+        }
+        return res.json(event);
+      case '/getEvents':
+        const events = await getEvents();
+        if (!events) {
+          return res.send("Error fetching user data");
+        }
+        return res.json(events);
       case "/getUpcomingEvents":
         const upcomingEvents = await getUpcomingEvents();
         if (!upcomingEvents) {
