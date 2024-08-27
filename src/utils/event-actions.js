@@ -74,7 +74,7 @@ export async function getUpcomingEvents() {
 export async function getArchivedEvents() {
   const currentDate = new Date()
 
-  return await databases.listDocuments(
+  const data = await databases.listDocuments(
     'hp_db',
     'events',
     [
@@ -82,4 +82,6 @@ export async function getArchivedEvents() {
       Query.lessThan('dateUntil', currentDate.toISOString()),
     ]
   )
+
+  return data.documents
 }
