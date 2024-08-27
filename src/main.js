@@ -13,7 +13,7 @@ export default async ({ req, res, log, error }) => {
   client
     .setEndpoint(`${process.env.APPWRITE_API_URL}/v1`)
     .setProject(`${process.env.APPWRITE_PROJECT_ID}`)
-    .setJWT(userId || "");
+    .setJWT(req.headers["x-appwrite-user-jwt"] || "");
 
   if (req.method === "GET") {
     switch (req.path) {
