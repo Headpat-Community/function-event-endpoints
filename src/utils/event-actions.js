@@ -16,6 +16,24 @@ export async function getEvent(query) {
   })
 }
 
+export async function getNextEvent() {
+  const currentDate = new Date()
+
+  const data = await databases.listDocuments(
+    'hp_db',
+    'events',
+    [
+      Query.orderAsc('date'),
+      Query.greaterThanEqual('date', currentDate.toISOString()),
+    ]
+  )
+
+  return data.documents.filter(event => {
+    const eventDateUntil = new Date(event.dateUntil)
+    return eventDateUntil > currentDate
+  })[0]
+}
+
 export async function getEvents() {
   const currentDate = new Date()
 
