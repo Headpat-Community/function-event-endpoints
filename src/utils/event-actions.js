@@ -70,3 +70,21 @@ export async function getUpcomingEvents() {
     return eventDateUntil > currentDate
   })
 }
+
+export async function getArchivedEvents() {
+  const currentDate = new Date()
+
+  const data = await databases.listDocuments(
+    'hp_db',
+    'events',
+    [
+      Query.orderAsc('date'),
+      Query.lessThan('dateUntil', currentDate.toISOString()),
+    ]
+  )
+
+  return data.documents.filter(event => {
+    const eventDateUntil = new Date(event.dateUntil)
+    return eventDateUntil > currentDate
+  })
+}

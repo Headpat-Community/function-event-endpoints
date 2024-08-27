@@ -1,5 +1,5 @@
 import { Client, Databases } from "node-appwrite";
-import { getEvent, getEvents, getNextEvent, getUpcomingEvents } from './utils/event-actions.js'
+import { getArchivedEvents, getEvent, getEvents, getNextEvent, getUpcomingEvents } from './utils/event-actions.js'
 
 export const client = new Client();
 export const databases = new Databases(client);
@@ -19,28 +19,19 @@ export default async ({ req, res, log, error }) => {
     switch (req.path) {
       case '/getEvent':
         const event = await getEvent(req.query);
-        if (!event) {
-          return res.send("Error fetching user data");
-        }
         return res.json(event);
       case '/getNextEvent':
         const nextEvent = await getNextEvent();
-        if (!nextEvent) {
-          return res.send("Error fetching user data");
-        }
         return res.json(nextEvent);
       case '/getEvents':
         const events = await getEvents();
-        if (!events) {
-          return res.send("Error fetching user data");
-        }
         return res.json(events);
       case "/getUpcomingEvents":
         const upcomingEvents = await getUpcomingEvents();
-        if (!upcomingEvents) {
-          return res.send("Error fetching user data");
-        }
         return res.json(upcomingEvents);
+      case "/getArchivedEvents":
+        const archivedEvents = await getArchivedEvents();
+        return res.json(archivedEvents);
       default:
         return res.json("No peeking.");
     }
