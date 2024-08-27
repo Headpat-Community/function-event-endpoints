@@ -28,7 +28,7 @@ export default async ({ req, res, log, error }) => {
         if (!nextEvent) {
           return res.send("Error fetching user data");
         }
-        return res.json(event);
+        return res.json(nextEvent);
       case '/getEvents':
         const events = await getEvents();
         if (!events) {
