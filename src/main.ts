@@ -1,5 +1,5 @@
 import { Client, Databases } from "node-appwrite";
-import { getArchivedEvents, getEvent, getEvents, getNextEvent, getUpcomingEvents } from './utils/event-actions.js'
+import { getArchivedEvents, getEvent, getEvents, getNextEvent, getUpcomingEvents } from './utils/event-actions'
 
 export const client = new Client();
 export const databases = new Databases(client);

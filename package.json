@@ -1,17 +1,19 @@
 {
-  "name": "function-user-endpoints",
+  "name": "function-event-endpoints",
   "version": "1.0.0",
   "description": "",
   "author": "Faye",
-  "main": "src/main.js",
+  "main": "src/main.ts",
   "type": "module",
   "scripts": {
     "format": "prettier --write ."
   },
   "devDependencies": {
-    "prettier": "^3.2.5"
+    "@types/node": "^22.7.0",
+    "prettier": "^3.3.3"
   },
   "dependencies": {
-    "node-appwrite": "^12.0.1"
+    "node-appwrite": "^14.1.0",
+    "typescript": "^5.6.2"
   }
 }
