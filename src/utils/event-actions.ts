@@ -1,19 +1,12 @@
 import { databases } from '../main.js'
 import { Query } from 'node-appwrite'
 
-export async function getEvent(query) {
-  const currentDate = new Date()
-
-  const data = await databases.getDocument(
+export async function getEvent(query: { eventId: string }) {
+  return await databases.getDocument(
     'hp_db',
     'events',
     `${query.eventId}`
   )
-
-  return data.documents.filter(event => {
-    const eventDateUntil = new Date(event.dateUntil)
-    return eventDateUntil > currentDate
-  })
 }
 
 export async function getNextEvent() {
@@ -27,6 +20,10 @@ export async function getNextEvent() {
       Query.greaterThanEqual('date', currentDate.toISOString()),
     ]
   )
+
+  if (data.documents.length === 0) {
+    return data.documents
+  }
 
   return data.documents.filter(event => {
     const eventDateUntil = new Date(event.dateUntil)
