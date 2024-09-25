@@ -1,6 +1,6 @@
 # ⚡ Node.js - Events API
 
-Edit `src/main.js` to get started and create something awesome! 🚀
+Edit `src/main.ts` to get started and create something awesome! 🚀
 
 ## 🧰 Usage
 
@@ -29,7 +29,7 @@ Edit `src/main.js` to get started and create something awesome! 🚀
 | Setting           | Value         |
 |-------------------|---------------|
 | Runtime           | Node (18.0)   |
-| Entrypoint        | `src/main.js` |
+| Entrypoint        | `src/main.ts` |
 | Build Commands    | `npm install` |
 | Permissions       | `any`         |
 | Timeout (Seconds) | 15            |
