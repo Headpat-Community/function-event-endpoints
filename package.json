@@ -3,18 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "author": "Faye",
-  "main": "src/main.ts",
+  "main": "dist/main.js",
   "type": "module",
   "scripts": {
-    "format": "prettier --write ."
-  },
-  "devDependencies": {
-    "@types/node": "^22.7.0",
-    "prettier": "^3.3.3",
-    "ts-node": "^10.9.2"
+    "format": "prettier --write .",
+    "build": "tsc"
   },
   "dependencies": {
     "node-appwrite": "^14.1.0",
     "typescript": "^5.6.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.0",
+    "prettier": "^3.3.3"
   }
 }

@@ -1,4 +1,4 @@
-import { databases } from '../main'
+import { databases } from '../main.js'
 import { Query } from 'node-appwrite'
 
 export async function getEvent(query) {
