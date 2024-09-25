@@ -4,6 +4,7 @@
   "description": "",
   "author": "Faye",
   "main": "src/main.ts",
+  "type": "module",
   "scripts": {
     "format": "prettier --write ."
   },
