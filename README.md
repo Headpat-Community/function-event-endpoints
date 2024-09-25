@@ -33,4 +33,3 @@ Edit `src/main.ts` to get started and create something awesome! 🚀
 | Build Commands    | `npm install` |
 | Permissions       | `any`         |
 | Timeout (Seconds) | 15            |
-
