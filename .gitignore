@@ -127,5 +127,5 @@ out
 .yarn/install-state.gz
 .pnp.*
 
-# IntelliJ
-.idea/
+# Output
+dist

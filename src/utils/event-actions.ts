@@ -1,84 +1,64 @@
-import { databases } from '../main.js'
-import { Query } from 'node-appwrite'
+import { databases } from "../main.js";
+import { Query } from "node-appwrite";
 
 export async function getEvent(query: { eventId: string }) {
-  return await databases.getDocument(
-    'hp_db',
-    'events',
-    `${query.eventId}`
-  )
+  return await databases.getDocument("hp_db", "events", `${query.eventId}`);
 }
 
 export async function getNextEvent() {
-  const currentDate = new Date()
+  const currentDate = new Date();
 
-  const data = await databases.listDocuments(
-    'hp_db',
-    'events',
-    [
-      Query.orderAsc('date'),
-      Query.greaterThanEqual('date', currentDate.toISOString()),
-    ]
-  )
+  const data = await databases.listDocuments("hp_db", "events", [
+    Query.orderAsc("date"),
+    Query.greaterThanEqual("date", currentDate.toISOString()),
+  ]);
 
   if (data.documents.length === 0) {
-    return data.documents
+    return data.documents;
   }
 
-  return data.documents.filter(event => {
-    const eventDateUntil = new Date(event.dateUntil)
-    return eventDateUntil > currentDate
-  })[0]
+  return data.documents.filter((event) => {
+    const eventDateUntil = new Date(event.dateUntil);
+    return eventDateUntil > currentDate;
+  })[0];
 }
 
 export async function getEvents() {
-  const currentDate = new Date()
+  const currentDate = new Date();
 
-  const data = await databases.listDocuments(
-    'hp_db',
-    'events',
-    [
-      Query.orderAsc('date'),
-      Query.greaterThanEqual('dateUntil', currentDate.toISOString()),
-      Query.lessThanEqual('date', currentDate.toISOString()),
-    ]
-  )
+  const data = await databases.listDocuments("hp_db", "events", [
+    Query.orderAsc("date"),
+    Query.greaterThanEqual("dateUntil", currentDate.toISOString()),
+    Query.lessThanEqual("date", currentDate.toISOString()),
+  ]);
 
-  return data.documents.filter(event => {
-    const eventDateUntil = new Date(event.dateUntil)
-    return eventDateUntil > currentDate
-  })
+  return data.documents.filter((event) => {
+    const eventDateUntil = new Date(event.dateUntil);
+    return eventDateUntil > currentDate;
+  });
 }
 
 export async function getUpcomingEvents() {
-  const currentDate = new Date()
+  const currentDate = new Date();
 
-  const data = await databases.listDocuments(
-    'hp_db',
-    'events',
-    [
-      Query.orderAsc('date'),
-      Query.greaterThanEqual('date', currentDate.toISOString()),
-    ]
-  )
+  const data = await databases.listDocuments("hp_db", "events", [
+    Query.orderAsc("date"),
+    Query.greaterThanEqual("date", currentDate.toISOString()),
+  ]);
 
-  return data.documents.filter(event => {
-    const eventDateUntil = new Date(event.dateUntil)
-    return eventDateUntil > currentDate
-  })
+  return data.documents.filter((event) => {
+    const eventDateUntil = new Date(event.dateUntil);
+    return eventDateUntil > currentDate;
+  });
 }
 
 export async function getArchivedEvents() {
-  const currentDate = new Date()
+  const currentDate = new Date();
 
-  const data = await databases.listDocuments(
-    'hp_db',
-    'events',
-    [
-      Query.orderAsc('date'),
-      Query.lessThan('dateUntil', currentDate.toISOString()),
-    ]
-  )
+  const data = await databases.listDocuments("hp_db", "events", [
+    Query.orderAsc("date"),
+    Query.lessThan("dateUntil", currentDate.toISOString()),
+  ]);
 
-  return data.documents
+  return data.documents;
 }

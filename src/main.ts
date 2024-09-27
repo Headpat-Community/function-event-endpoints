@@ -1,5 +1,11 @@
 import { Client, Databases } from "node-appwrite";
-import { getArchivedEvents, getEvent, getEvents, getNextEvent, getUpcomingEvents } from './utils/event-actions.js';
+import {
+  getArchivedEvents,
+  getEvent,
+  getEvents,
+  getNextEvent,
+  getUpcomingEvents,
+} from "./utils/event-actions.js";
 
 export const client = new Client();
 export const databases = new Databases(client);
@@ -16,13 +22,13 @@ export default async ({ req, res, log, error }) => {
 
   if (req.method === "GET") {
     switch (req.path) {
-      case '/getEvent':
+      case "/getEvent":
         const event = await getEvent(req.query);
         return res.json(event);
-      case '/getNextEvent':
+      case "/getNextEvent":
         const nextEvent = await getNextEvent();
         return res.json(nextEvent);
-      case '/getEvents':
+      case "/getEvents":
         const events = await getEvents();
         return res.json(events);
       case "/getUpcomingEvents":

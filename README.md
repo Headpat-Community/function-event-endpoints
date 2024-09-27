@@ -27,7 +27,7 @@ Edit `src/main.ts` to get started and create something awesome! 🚀
 ## ⚙️ Configuration
 
 | Setting           | Value         |
-|-------------------|---------------|
+| ----------------- | ------------- |
 | Runtime           | Node (18.0)   |
 | Entrypoint        | `src/main.ts` |
 | Build Commands    | `npm install` |
