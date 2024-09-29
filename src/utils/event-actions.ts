@@ -1,41 +1,58 @@
 import { databases } from "../main.js";
 import { Query } from "node-appwrite";
+import { handleError } from "./errorHandler.js";
 
 export async function getEvent(query: { eventId: string }) {
-  return await databases.getDocument("hp_db", "events", `${query.eventId}`);
+  try {
+    return await databases.getDocument("hp_db", "events", query.eventId);
+  } catch (error) {
+    return handleError("Error fetching event", "event-fetch-error", 500);
+  }
 }
 
 export async function getNextEvent() {
   const currentDate = new Date();
 
-  const data = await databases.listDocuments("hp_db", "events", [
-    Query.orderAsc("date"),
-    Query.greaterThanEqual("date", currentDate.toISOString()),
-  ]);
+  try {
+    const data = await databases.listDocuments("hp_db", "events", [
+      Query.orderAsc("date"),
+      Query.greaterThanEqual("date", currentDate.toISOString()),
+    ]);
 
-  if (data.documents.length === 0) {
-    return data.documents;
+    if (data.documents.length === 0) {
+      return data.documents;
+    }
+
+    return data.documents.filter((event) => {
+      const eventDateUntil = new Date(event.dateUntil);
+      return eventDateUntil > currentDate;
+    })[0];
+  } catch (error) {
+    return handleError(
+      "Error fetching next events",
+      "events_next_fetch-error",
+      500,
+    );
   }
-
-  return data.documents.filter((event) => {
-    const eventDateUntil = new Date(event.dateUntil);
-    return eventDateUntil > currentDate;
-  })[0];
 }
 
 export async function getEvents() {
   const currentDate = new Date();
 
-  const data = await databases.listDocuments("hp_db", "events", [
-    Query.orderAsc("date"),
-    Query.greaterThanEqual("dateUntil", currentDate.toISOString()),
-    Query.lessThanEqual("date", currentDate.toISOString()),
-  ]);
+  try {
+    const data = await databases.listDocuments("hp_db", "events", [
+      Query.orderAsc("date"),
+      Query.greaterThanEqual("dateUntil", currentDate.toISOString()),
+      Query.lessThanEqual("date", currentDate.toISOString()),
+    ]);
 
-  return data.documents.filter((event) => {
-    const eventDateUntil = new Date(event.dateUntil);
-    return eventDateUntil > currentDate;
-  });
+    return data.documents.filter((event) => {
+      const eventDateUntil = new Date(event.dateUntil);
+      return eventDateUntil > currentDate;
+    });
+  } catch (error) {
+    return handleError("Error fetching events", "events_fetch-error", 500);
+  }
 }
 
 export async function getUpcomingEvents() {
