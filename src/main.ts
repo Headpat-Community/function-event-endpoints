@@ -24,6 +24,11 @@ export default async ({ req, res, log, error }) => {
     .setProject(`${process.env.APPWRITE_PROJECT_ID}`)
     .setJWT(req.headers["x-appwrite-user-jwt"] || "");
 
+  clientAdmin
+  .setEndpoint(`${process.env.APPWRITE_API_URL}/v1`)
+  .setProject(`${process.env.APPWRITE_PROJECT_ID}`)
+  .setKey(req.headers['x-appwrite-key']);
+
   if (req.method === "GET") {
     switch (req.path) {
       case "/event":
