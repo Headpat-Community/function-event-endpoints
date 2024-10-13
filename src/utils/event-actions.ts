@@ -1,10 +1,14 @@
-import { databases } from "../main.js";
+import {databases, databasesAdmin} from "../main.js";
 import { Query } from "node-appwrite";
 import { handleError } from "./errorHandler.js";
 
 export async function getEvent(query: { eventId: string }) {
   try {
-    return await databases.getDocument("hp_db", "events", query.eventId);
+    const event = await databases.getDocument("hp_db", "events", query.eventId);
+    const attendees = await databasesAdmin.listDocuments("hp_db", "events-attendees", [
+      Query.equal("eventId", query.eventId),
+    ]);
+    return { ...event, attendees: attendees.documents };
   } catch (error) {
     return handleError("Error fetching event", "event-fetch-error", 500);
   }

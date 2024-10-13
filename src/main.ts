@@ -7,8 +7,11 @@ import {
   getUpcomingEvents,
 } from "./utils/event-actions.js";
 
-export const client = new Client();
+const client = new Client();
 export const databases = new Databases(client);
+
+const clientAdmin = new Client();
+export const databasesAdmin = new Databases(clientAdmin);
 
 export { ID } from "node-appwrite";
 
