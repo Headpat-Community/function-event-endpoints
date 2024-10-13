@@ -7,6 +7,7 @@ export async function getEvent(query: { eventId: string }, error: any) {
     const event = await databases.getDocument("hp_db", "events", query.eventId);
     const attendees = await databasesAdmin.listDocuments("hp_db", "events-attendees", [
       Query.equal("eventId", query.eventId),
+      Query.limit(50000000)
     ]);
     return { ...event, attendees: attendees.total };
   } catch (e) {
@@ -19,6 +20,7 @@ export async function getEventAttendees(query: { eventId: string }, error: any) 
   try {
     const attendees = await databasesAdmin.listDocuments("hp_db", "events-attendees", [
       Query.equal("eventId", query.eventId),
+      Query.limit(50000000)
     ]);
     return attendees.total;
   } catch (e) {
@@ -53,7 +55,7 @@ export async function getNextEvent(error: any) {
   }
 }
 
-export async function getEvents(error: any) {
+export async function getEvents(query: { offset: number, limit: number }, error: any) {
   const currentDate = new Date();
 
   try {
@@ -61,10 +63,17 @@ export async function getEvents(error: any) {
       Query.orderAsc("date"),
       Query.greaterThanEqual("dateUntil", currentDate.toISOString()),
       Query.lessThanEqual("date", currentDate.toISOString()),
+      Query.limit(query.limit || 20),
+      Query.offset(query.offset || 0),
     ]);
 
-    return data.documents.filter((event) => {
-      const eventDateUntil = new Date(event.dateUntil);
+    const eventsWithAttendees = await Promise.all(data.documents.map(async (event) => {
+      const attendees = await getEventAttendees({ eventId: event.$id }, error);
+      return { ...event, attendees: attendees };
+    }));
+
+    return eventsWithAttendees.filter((event) => {
+      const eventDateUntil = new Date(event['dateUntil']);
       return eventDateUntil > currentDate;
     });
   } catch (e) {
