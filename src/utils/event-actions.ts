@@ -8,7 +8,7 @@ export async function getEvent(query: { eventId: string }) {
     const attendees = await databasesAdmin.listDocuments("hp_db", "events-attendees", [
       Query.equal("eventId", query.eventId),
     ]);
-    return { ...event, attendees: attendees.documents };
+    return { ...event, attendees: attendees.total };
   } catch (error) {
     return handleError("Error fetching event", "event-fetch-error", 500);
   }
