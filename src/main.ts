@@ -1,13 +1,14 @@
-import { Client, Databases } from "node-appwrite";
+import { Client, Account, Databases } from "node-appwrite";
 import {
   getArchivedEvents,
-  getEvent,
+  getEvent, getEventAttendees,
   getEvents,
   getNextEvent,
-  getUpcomingEvents,
+  getUpcomingEvents, postEventAttendee,
 } from "./utils/event-actions.js";
 
 const client = new Client();
+export const account = new Account(client);
 export const databases = new Databases(client);
 
 const clientAdmin = new Client();
@@ -25,21 +26,34 @@ export default async ({ req, res, log, error }) => {
 
   if (req.method === "GET") {
     switch (req.path) {
-      case "/getEvent":
-        const event = await getEvent(req.query);
+      case "/event":
+        const event = await getEvent(req.query, error);
         return res.json(event);
-      case "/getNextEvent":
-        const nextEvent = await getNextEvent();
+      case "/event/attendees":
+        const eventAttendees = await getEventAttendees(req.query, error);
+        return res.json(eventAttendees);
+      case "/event/next":
+        const nextEvent = await getNextEvent(error);
         return res.json(nextEvent);
-      case "/getEvents":
-        const events = await getEvents();
+      case "/events":
+        const events = await getEvents(error);
         return res.json(events);
-      case "/getUpcomingEvents":
-        const upcomingEvents = await getUpcomingEvents();
+      case "/events/upcoming":
+        const upcomingEvents = await getUpcomingEvents(error);
         return res.json(upcomingEvents);
-      case "/getArchivedEvents":
-        const archivedEvents = await getArchivedEvents();
+      case "/events/archived":
+        const archivedEvents = await getArchivedEvents(error);
         return res.json(archivedEvents);
+      default:
+        return res.json("No peeking.");
+    }
+  } else if (req.method === "POST") {
+    switch (req.path) {
+      case "/event":
+        return res.json("Not implemented.");
+      case "/event/attendee":
+        const attendee = await postEventAttendee(userId, req.query, error);
+        return res.json(attendee);
       default:
         return res.json("No peeking.");
     }
