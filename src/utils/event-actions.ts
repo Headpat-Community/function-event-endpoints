@@ -114,8 +114,18 @@ export async function getUpcomingEvents(error: any) {
       Query.greaterThanEqual("date", currentDate.toISOString()),
     ]);
 
-    return data.documents.filter((event) => {
-      const eventDateUntil = new Date(event.dateUntil);
+    const eventsWithAttendees = await Promise.all(
+      data.documents.map(async (event) => {
+        const attendees = await getEventAttendees(
+          { eventId: event.$id },
+          error,
+        );
+        return { ...event, attendees: attendees || 0 };
+      }),
+    );
+
+    return eventsWithAttendees.filter((event) => {
+      const eventDateUntil = new Date(event["dateUntil"]);
       return eventDateUntil > currentDate;
     });
   } catch (e) {
@@ -137,7 +147,15 @@ export async function getArchivedEvents(error: any) {
       Query.lessThan("dateUntil", currentDate.toISOString()),
     ]);
 
-    return data.documents;
+    return await Promise.all(
+      data.documents.map(async (event) => {
+        const attendees = await getEventAttendees(
+          { eventId: event.$id },
+          error,
+        );
+        return { ...event, attendees: attendees || 0 };
+      }),
+    );
   } catch (e) {
     error("Error fetching archived events", e);
     return handleResponse(
