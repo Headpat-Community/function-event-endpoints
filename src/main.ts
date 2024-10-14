@@ -1,10 +1,12 @@
 import { Client, Account, Databases } from "node-appwrite";
 import {
   getArchivedEvents,
-  getEvent, getEventAttendees,
+  getEvent,
+  getEventAttendees,
   getEvents,
   getNextEvent,
-  getUpcomingEvents, postEventAttendee,
+  getUpcomingEvents,
+  postEventAttendee,
 } from "./utils/event-actions.js";
 
 const client = new Client();
@@ -25,9 +27,9 @@ export default async ({ req, res, log, error }) => {
     .setJWT(req.headers["x-appwrite-user-jwt"] || "");
 
   clientAdmin
-  .setEndpoint(`${process.env.APPWRITE_API_URL}/v1`)
-  .setProject(`${process.env.APPWRITE_PROJECT_ID}`)
-  .setKey(req.headers['x-appwrite-key']);
+    .setEndpoint(`${process.env.APPWRITE_API_URL}/v1`)
+    .setProject(`${process.env.APPWRITE_PROJECT_ID}`)
+    .setKey(req.headers["x-appwrite-key"]);
 
   if (req.method === "GET") {
     switch (req.path) {
@@ -41,13 +43,13 @@ export default async ({ req, res, log, error }) => {
         const nextEvent = await getNextEvent(error);
         return res.json(nextEvent);
       case "/events":
-        const events = await getEvents(error);
+        const events = await getEvents(req.query, error);
         return res.json(events);
       case "/events/upcoming":
-        const upcomingEvents = await getUpcomingEvents(error);
+        const upcomingEvents = await getUpcomingEvents(req.query, error);
         return res.json(upcomingEvents);
       case "/events/archived":
-        const archivedEvents = await getArchivedEvents(error);
+        const archivedEvents = await getArchivedEvents(req.query, error);
         return res.json(archivedEvents);
       default:
         return res.json("No peeking.");

@@ -105,7 +105,10 @@ export async function getEvents(
   }
 }
 
-export async function getUpcomingEvents(error: any) {
+export async function getUpcomingEvents(
+  query: { offset: number; limit: number },
+  error: any,
+) {
   const currentDate = new Date();
 
   try {
@@ -138,7 +141,10 @@ export async function getUpcomingEvents(error: any) {
   }
 }
 
-export async function getArchivedEvents(error: any) {
+export async function getArchivedEvents(
+  query: { offset: number; limit: number },
+  error: any,
+) {
   const currentDate = new Date();
 
   try {
