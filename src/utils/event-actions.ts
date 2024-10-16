@@ -25,7 +25,7 @@ export async function getEventAttendees(
     const attendees = await databasesAdmin.listDocuments(
       "hp_db",
       "events-attendees",
-      [Query.equal("eventId", query.eventId), Query.limit(50000000)],
+      [Query.equal("eventId", query.eventId), Query.limit(1)],
     );
     return attendees.total;
   } catch (e) {
@@ -41,6 +41,7 @@ export async function getNextEvent(error: any) {
     const data = await databases.listDocuments("hp_db", "events", [
       Query.orderAsc("date"),
       Query.greaterThanEqual("date", currentDate.toISOString()),
+      Query.limit(1),
     ]);
 
     if (data.documents.length === 0) {
@@ -115,6 +116,8 @@ export async function getUpcomingEvents(
     const data = await databases.listDocuments("hp_db", "events", [
       Query.orderAsc("date"),
       Query.greaterThanEqual("date", currentDate.toISOString()),
+      Query.limit(query.limit || 20),
+      Query.offset(query.offset || 0),
     ]);
 
     const eventsWithAttendees = await Promise.all(
@@ -151,6 +154,8 @@ export async function getArchivedEvents(
     const data = await databases.listDocuments("hp_db", "events", [
       Query.orderAsc("date"),
       Query.lessThan("dateUntil", currentDate.toISOString()),
+      Query.limit(query.limit || 20),
+      Query.offset(query.offset || 0),
     ]);
 
     return await Promise.all(
