@@ -13,7 +13,7 @@ export async function getEvent(query: { eventId: string }, error: any) {
     return { ...event, attendees: attendees.total };
   } catch (e) {
     error("Error fetching event", e);
-    return handleResponse("Error fetching event", "event-fetch-error", 500);
+    return handleResponse("Error fetching event", "event_fetch_error", 500);
   }
 }
 
@@ -30,7 +30,7 @@ export async function getEventAttendees(
     return attendees.total;
   } catch (e) {
     error("Error fetching event attendees", e);
-    return handleResponse("Error fetching event", "event-fetch-error", 500);
+    return handleResponse("Error fetching event", "event_fetch_error", 500);
   }
 }
 
@@ -102,7 +102,7 @@ export async function getEvents(
     });
   } catch (e) {
     error("Error fetching events", e);
-    return handleResponse("Error fetching events", "events_fetch-error", 500);
+    return handleResponse("Error fetching events", "events_fetch_error", 500);
   }
 }
 
@@ -138,7 +138,7 @@ export async function getUpcomingEvents(
     error("Error fetching upcoming events", e);
     return handleResponse(
       "Error fetching upcoming events",
-      "events_upcoming_fetch-error",
+      "events_upcoming_fetch_error",
       500,
     );
   }
@@ -171,7 +171,7 @@ export async function getArchivedEvents(
     error("Error fetching archived events", e);
     return handleResponse(
       "Error fetching archived events",
-      "events_archived_fetch-error",
+      "events_archived_fetch_error",
       500,
     );
   }
@@ -198,12 +198,12 @@ export async function postEventAttendee(
         Permission.delete(Role.user(userId)),
       ],
     );
-    return handleResponse("Attendee added", "event-attendee-add-success", 200);
+    return handleResponse("Attendee added", "event_attendee_add_success", 200);
   } catch (e) {
     error("Error adding attendee", e);
     return handleResponse(
       "Error adding attendee",
-      "event-attendee-add-error",
+      "event_attendee_add_error",
       500,
     );
   }
