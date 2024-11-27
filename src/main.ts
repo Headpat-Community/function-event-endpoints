@@ -37,7 +37,11 @@ export default async ({ req, res, log, error }) => {
         const event = await getEvent(req.query, error);
         return res.json(event);
       case "/event/attendees":
-        const eventAttendees = await getEventAttendees(req.query, error);
+        const eventAttendees = await getEventAttendees(
+          req.query,
+          error,
+          userId,
+        );
         return res.json(eventAttendees);
       case "/event/next":
         const nextEvent = await getNextEvent(error);

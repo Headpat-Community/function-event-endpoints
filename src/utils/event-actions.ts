@@ -20,14 +20,23 @@ export async function getEvent(query: { eventId: string }, error: any) {
 export async function getEventAttendees(
   query: { eventId: string },
   error: any,
+  userId?: string,
 ) {
   try {
-    const attendees = await databasesAdmin.listDocuments(
+    const eventAttendees = await databasesAdmin.listDocuments(
       "hp_db",
       "events-attendees",
-      [Query.equal("eventId", query.eventId), Query.limit(1)],
+      [Query.equal("eventId", query.eventId), Query.limit(500000)],
     );
-    return attendees.total;
+
+    let userAttending = false;
+    if (userId) {
+      userAttending = eventAttendees.documents.some(
+        (attendee) => attendee.userId === userId,
+      );
+    }
+
+    return { attendees: eventAttendees.total, isAttending: userAttending };
   } catch (e) {
     error("Error fetching event attendees", e);
     return handleResponse("Error fetching event", "event_fetch_error", 500);
