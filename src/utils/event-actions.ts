@@ -209,11 +209,18 @@ export async function postEventAttendee(
     );
     return handleResponse("Attendee added", "event_attendee_add_success", 200);
   } catch (e) {
+    if (e.type === "document_already_exists") {
+      return handleResponse(
+        "Attendee already added",
+        "event_attendee_add_already_added",
+        400,
+      );
+    }
     error("Error adding attendee", e);
     return handleResponse(
-      "Error adding attendee",
-      "event_attendee_add_error",
-      500,
+      e.message || "Error adding attendee",
+      e.type || "event_attendee_add_error",
+      e.code || 500,
     );
   }
 }
