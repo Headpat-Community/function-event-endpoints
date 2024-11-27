@@ -5,12 +5,11 @@ import { checkAuthentication, handleResponse } from "./errorHandler.js";
 export async function getEvent(query: { eventId: string }, error: any) {
   try {
     const event = await databases.getDocument("hp_db", "events", query.eventId);
-    const attendees = await databasesAdmin.listDocuments(
-      "hp_db",
-      "events-attendees",
-      [Query.equal("eventId", query.eventId), Query.limit(50000000)],
+    const attendeesData = await getEventAttendees(
+      { eventId: query.eventId },
+      error,
     );
-    return { ...event, attendees: attendees.total };
+    return { ...event, attendeesData };
   } catch (e) {
     error("Error fetching event", e);
     return handleResponse("Error fetching event", "event_fetch_error", 500);
@@ -63,11 +62,11 @@ export async function getNextEvent(error: any) {
     })[0];
 
     if (nextEvent) {
-      const attendees = await getEventAttendees(
+      const attendeesData = await getEventAttendees(
         { eventId: nextEvent.$id },
         error,
       );
-      return { ...nextEvent, attendees: attendees };
+      return { ...nextEvent, attendeesData };
     }
 
     return nextEvent;
