@@ -1,5 +1,6 @@
 import { Client, Account, Databases } from "node-appwrite";
 import {
+  deleteEventAttendee,
   getArchivedEvents,
   getEvent,
   getEventAttendees,
@@ -60,10 +61,16 @@ export default async ({ req, res, log, error }) => {
     }
   } else if (req.method === "POST") {
     switch (req.path) {
-      case "/event":
-        return res.json("Not implemented.");
       case "/event/attendee":
         const attendee = await postEventAttendee(userId, req.query, error);
+        return res.json(attendee);
+      default:
+        return res.json("No peeking.");
+    }
+  } else if (req.method === "DELETE") {
+    switch (req.path) {
+      case "/event/attendee":
+        const attendee = await deleteEventAttendee(userId, req.query, error);
         return res.json(attendee);
       default:
         return res.json("No peeking.");

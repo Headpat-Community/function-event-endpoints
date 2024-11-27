@@ -224,3 +224,46 @@ export async function postEventAttendee(
     );
   }
 }
+
+export async function deleteEventAttendee(
+  userId: string,
+  query: { eventId: string },
+  error: any,
+) {
+  await checkAuthentication(userId);
+
+  try {
+    const data = await databases.listDocuments("hp_db", "events-attendees", [
+      Query.equal("eventId", query.eventId),
+      Query.equal("userId", userId),
+      Query.limit(1),
+    ]);
+
+    if (data.documents.length === 0) {
+      return handleResponse(
+        "Attendee not found",
+        "event_attendee_remove_not_found",
+        404,
+      );
+    }
+
+    await databasesAdmin.deleteDocument(
+      "hp_db",
+      "events-attendees",
+      data.documents[0].$id,
+    );
+
+    return handleResponse(
+      "Attendee removed",
+      "event_attendee_remove_success",
+      200,
+    );
+  } catch (e) {
+    error("Error removing attendee", e);
+    return handleResponse(
+      e.message || "Error removing attendee",
+      e.type || "event_attendee_remove_error",
+      e.code || 500,
+    );
+  }
+}
