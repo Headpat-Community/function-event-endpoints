@@ -9,7 +9,11 @@ export async function getEvent(query: { eventId: string }, error: any) {
       { eventId: query.eventId },
       error,
     );
-    return { ...event, attendeesData };
+    return {
+      ...event,
+      attendees: attendeesData["attendees"] || 0,
+      isAttending: attendeesData["isAttending"] || false,
+    };
   } catch (e) {
     error("Error fetching event", e);
     return handleResponse("Error fetching event", "event_fetch_error", 500);
@@ -35,7 +39,10 @@ export async function getEventAttendees(
       );
     }
 
-    return { attendees: eventAttendees.total, isAttending: userAttending };
+    return {
+      attendees: eventAttendees.total || 0,
+      isAttending: userAttending || false,
+    };
   } catch (e) {
     error("Error fetching event attendees", e);
     return handleResponse("Error fetching event", "event_fetch_error", 500);
@@ -66,7 +73,11 @@ export async function getNextEvent(error: any) {
         { eventId: nextEvent.$id },
         error,
       );
-      return { ...nextEvent, attendeesData };
+      return {
+        ...nextEvent,
+        attendees: attendeesData["attendees"] || 0,
+        isAttending: attendeesData["isAttending"] || false,
+      };
     }
 
     return nextEvent;
@@ -96,11 +107,15 @@ export async function getEvents(
 
     const eventsWithAttendees = await Promise.all(
       data.documents.map(async (event) => {
-        const attendees = await getEventAttendees(
+        const attendeesData = await getEventAttendees(
           { eventId: event.$id },
           error,
         );
-        return { ...event, attendees: attendees || 0 };
+        return {
+          ...event,
+          attendees: attendeesData["attendees"] || 0,
+          isAttending: attendeesData["isAttending"] || false,
+        };
       }),
     );
 
@@ -130,11 +145,15 @@ export async function getUpcomingEvents(
 
     const eventsWithAttendees = await Promise.all(
       data.documents.map(async (event) => {
-        const attendees = await getEventAttendees(
+        const attendeesData = await getEventAttendees(
           { eventId: event.$id },
           error,
         );
-        return { ...event, attendees: attendees || 0 };
+        return {
+          ...event,
+          attendees: attendeesData["attendees"] || 0,
+          isAttending: attendeesData["isAttending"] || false,
+        };
       }),
     );
 
@@ -168,11 +187,15 @@ export async function getArchivedEvents(
 
     return await Promise.all(
       data.documents.map(async (event) => {
-        const attendees = await getEventAttendees(
+        const attendeesData = await getEventAttendees(
           { eventId: event.$id },
           error,
         );
-        return { ...event, attendees: attendees || 0 };
+        return {
+          ...event,
+          attendees: attendeesData["attendees"] || 0,
+          isAttending: attendeesData["isAttending"] || false,
+        };
       }),
     );
   } catch (e) {
