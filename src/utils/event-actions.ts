@@ -216,6 +216,19 @@ export async function postEventAttendee(
   await checkAuthentication(userId);
 
   try {
+    const eventData = await databases.getDocument(
+      "hp_db",
+      "events",
+      query.eventId,
+    );
+
+    const currentDate = new Date();
+    const eventDateUntil = new Date(eventData.dateUntil);
+
+    if (eventDateUntil < currentDate) {
+      return handleResponse("Event has ended", "event_ended", 400);
+    }
+
     await databasesAdmin.createDocument(
       "hp_db",
       "events-attendees",
@@ -224,10 +237,7 @@ export async function postEventAttendee(
         eventId: query.eventId,
         userId: userId,
       },
-      [
-        Permission.read(Role.user(userId)),
-        Permission.delete(Role.user(userId)),
-      ],
+      [Permission.read(Role.user(userId))],
     );
     return handleResponse("Attendee added", "event_attendee_add_success", 200);
   } catch (e) {
@@ -255,6 +265,19 @@ export async function deleteEventAttendee(
   await checkAuthentication(userId);
 
   try {
+    const eventData = await databases.getDocument(
+      "hp_db",
+      "events",
+      query.eventId,
+    );
+
+    const currentDate = new Date();
+    const eventDateUntil = new Date(eventData.dateUntil);
+
+    if (eventDateUntil < currentDate) {
+      return handleResponse("Event has ended", "event_ended", 400);
+    }
+
     const data = await databases.listDocuments("hp_db", "events-attendees", [
       Query.equal("eventId", query.eventId),
       Query.equal("userId", userId),
