@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "author": "Faye",
-  "main": "dist/main.js",
+  "main": "src/main.ts",
   "type": "module",
   "scripts": {
     "format": "prettier --write .",
